@@ -4,8 +4,11 @@ import {
   DrawerHeader,
   DrawerHeaderTitle,
   InlineDrawer,
+  Button,
   makeStyles,
+  tokens,
 } from "@fluentui/react-components";
+import { WeatherMoonRegular, WeatherSunnyRegular } from "@fluentui/react-icons";
 
 const useStyles = makeStyles({
   root: {
@@ -16,7 +19,6 @@ const useStyles = makeStyles({
     minHeight: "100vh",
     backgroundColor: "#fff",
   },
-
   content: {
     flex: "1",
     padding: "16px",
@@ -24,20 +26,55 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
   },
+  contentLight: {
+    backgroundColor: tokens.colorNeutralBackground1,
+  },
+  contentDark: {
+    backgroundColor: tokens.colorNeutralBackground2, // Slightly lighter shade in dark mode
+  },
+  headerContent: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+  },
 });
 
 interface SidebarProps {
   children: ReactNode;
+  isDarkMode: boolean;
+  toggleTheme: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  children,
+  isDarkMode,
+  toggleTheme,
+}) => {
   const styles = useStyles();
+
+  const contentClassName = `${styles.content} ${
+    isDarkMode ? styles.contentDark : styles.contentLight
+  }`;
 
   return (
     <div className={styles.root}>
       <InlineDrawer separator open>
         <DrawerHeader>
-          <DrawerHeaderTitle>Always open</DrawerHeaderTitle>
+          <div className={styles.headerContent}>
+            <DrawerHeaderTitle>Always open</DrawerHeaderTitle>
+            <Button
+              size="small"
+              icon={
+                isDarkMode ? <WeatherSunnyRegular /> : <WeatherMoonRegular />
+              }
+              onClick={toggleTheme}
+              aria-label={
+                isDarkMode ? "Switch to light mode" : "Switch to dark mode"
+              }
+              title={isDarkMode ? "Light mode" : "Dark mode"}
+            />
+          </div>
         </DrawerHeader>
 
         <DrawerBody>
@@ -45,7 +82,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         </DrawerBody>
       </InlineDrawer>
 
-      <div className={styles.content}>{children}</div>
+      <div className={contentClassName}>{children}</div>
     </div>
   );
 };
