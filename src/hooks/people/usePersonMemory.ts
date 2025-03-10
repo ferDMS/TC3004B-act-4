@@ -11,7 +11,7 @@ export const usePersonMemory = () => {
   useEffect(() => {
     // Fetch new person data when the component mounts
     fetchData();
-  }, []);
+  }, [fetchData]); // Add fetchData to the dependency array
 
   useEffect(() => {
     if (data) {

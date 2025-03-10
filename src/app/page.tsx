@@ -18,7 +18,7 @@ export default function Home() {
         <div className="border rounded shadow p-4 max-w-sm text-center">
           <p className="text-gray-600">No person data available</p>
           <p className="text-sm text-gray-500 mt-2">
-            Click "New Person" to get started
+            Click &quot;New Person&quot; to get started
           </p>
         </div>
       )}
