@@ -8,7 +8,9 @@ import {
   FluentProvider,
   teamsDarkTheme,
   teamsLightTheme,
+  Button,
 } from "@fluentui/react-components";
+import { ArrowResetRegular } from "@fluentui/react-icons";
 
 export default function Home() {
   const { person, history, loading, error, refreshUser, clearHistory } =
@@ -37,7 +39,24 @@ export default function Home() {
 
   const mainContent = (
     <div className="flex flex-col items-center justify-center h-full w-full">
-      <PersonalInfoCard />
+      <PersonalInfoCard person={person} loading={loading} />
+
+      <div className="flex justify-center mt-5 gap-3">
+        <Button
+          appearance="primary"
+          icon={<ArrowResetRegular />}
+          onClick={refreshUser}
+        >
+          New Person
+        </Button>
+        {history.length >= 1 && (
+          <Button appearance="subtle" onClick={clearHistory}>
+            Clear History
+          </Button>
+        )}
+      </div>
+
+      {error && <div className="mt-3 text-red-500 text-sm">{error}</div>}
     </div>
   );
 

@@ -35,6 +35,7 @@ export const usePersonMemory = () => {
 
     // Map the response to match our Person type
     return {
+      avatar: `${userData.picture.large}`,
       name: `${userData.name.first} ${userData.name.last}`,
       email: userData.email,
       birthday: new Date(userData.dob.date).toLocaleDateString(),

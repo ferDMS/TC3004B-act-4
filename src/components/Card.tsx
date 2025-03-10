@@ -4,6 +4,7 @@ import {
   Text,
   Button,
   Avatar,
+  Spinner,
   makeStyles,
 } from "@fluentui/react-components";
 import { EyeRegular, EyeOffRegular } from "@fluentui/react-icons";
@@ -16,6 +17,7 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     gap: "12px",
+    minHeight: "400px", // Ensure consistent height during loading
   },
   header: {
     display: "flex",
@@ -50,23 +52,24 @@ const useStyles = makeStyles({
     flexDirection: "column",
     flexGrow: 1,
   },
+  loadingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    width: "100%",
+    flexGrow: 1,
+  },
 });
 
-const PersonalInfoCard = () => {
+interface PersonalInfoCardProps {
+  person: Person | null;
+  loading: boolean;
+}
+
+const PersonalInfoCard = ({ person, loading }: PersonalInfoCardProps) => {
   const styles = useStyles();
   const [showPassword, setShowPassword] = useState(false);
-
-  // Hard coded data representing a Person
-  const personData: Person = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    birthday: "1990-01-15",
-    address: "123 Main St, City, Country",
-    phone: "(555) 123-4567",
-    password: "secureP@ssw0rd",
-    avatar:
-      "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250",
-  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -74,53 +77,65 @@ const PersonalInfoCard = () => {
 
   return (
     <Card className={styles.card}>
-      <div className={styles.header}>
-        <div className={styles.avatarContainer}>
-          <Avatar
-            image={{ src: personData.avatar }}
-            name={personData.name}
-            size={72}
-          />
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <Spinner size="medium" label="Loading..." />
         </div>
-        <div className={styles.userInfo}>
-          <Text weight="semibold" size={500}>
-            {personData.name}
-          </Text>
+      ) : person ? (
+        <>
+          <div className={styles.header}>
+            <div className={styles.avatarContainer}>
+              <Avatar
+                image={{ src: person.avatar }}
+                name={person.name}
+                size={72}
+              />
+            </div>
+            <div className={styles.userInfo}>
+              <Text weight="semibold" size={500}>
+                {person.name}
+              </Text>
+            </div>
+          </div>
+
+          <div className={styles.infoRow}>
+            <Text className={styles.label}>Email:</Text>
+            <Text>{person.email}</Text>
+          </div>
+
+          <div className={styles.infoRow}>
+            <Text className={styles.label}>Birthday:</Text>
+            <Text>{person.birthday}</Text>
+          </div>
+
+          <div className={styles.infoRow}>
+            <Text className={styles.label}>Address:</Text>
+            <Text>{person.address}</Text>
+          </div>
+
+          <div className={styles.infoRow}>
+            <Text className={styles.label}>Phone:</Text>
+            <Text>{person.phone}</Text>
+          </div>
+
+          <div className={styles.passwordRow}>
+            <div className={styles.passwordContainer}>
+              <Text className={styles.label}>Password:</Text>
+              <Text>{showPassword ? person.password : "••••••••••••"}</Text>
+            </div>
+            <Button
+              size="small"
+              icon={showPassword ? <EyeOffRegular /> : <EyeRegular />}
+              onClick={togglePasswordVisibility}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            />
+          </div>
+        </>
+      ) : (
+        <div className={styles.loadingContainer}>
+          <Text align="center">No user data available</Text>
         </div>
-      </div>
-
-      <div className={styles.infoRow}>
-        <Text className={styles.label}>Email:</Text>
-        <Text>{personData.email}</Text>
-      </div>
-
-      <div className={styles.infoRow}>
-        <Text className={styles.label}>Birthday:</Text>
-        <Text>{personData.birthday}</Text>
-      </div>
-
-      <div className={styles.infoRow}>
-        <Text className={styles.label}>Address:</Text>
-        <Text>{personData.address}</Text>
-      </div>
-
-      <div className={styles.infoRow}>
-        <Text className={styles.label}>Phone:</Text>
-        <Text>{personData.phone}</Text>
-      </div>
-
-      <div className={styles.passwordRow}>
-        <div className={styles.passwordContainer}>
-          <Text className={styles.label}>Password:</Text>
-          <Text>{showPassword ? personData.password : "••••••••••••"}</Text>
-        </div>
-        <Button
-          size="small"
-          icon={showPassword ? <EyeOffRegular /> : <EyeRegular />}
-          onClick={togglePasswordVisibility}
-          aria-label={showPassword ? "Hide password" : "Show password"}
-        />
-      </div>
+      )}
     </Card>
   );
 };
