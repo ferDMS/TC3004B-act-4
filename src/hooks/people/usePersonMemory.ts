@@ -1,18 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePersonFetch } from "./usePersonFetch";
 import { PersonResponse } from "@/types/https/people.response";
-import { Person } from "@/types/people"; // Import the Person type
+import { Person } from "@/types/people";
 
 export const usePersonMemory = () => {
   const { data, loading, error, fetchData } = usePersonFetch();
   const [history, setHistory] = useState<PersonResponse[]>([]);
+  // Use a ref to track if we've done the initial fetch
+  const initialFetchDone = useRef(false);
 
-  // Add to history when new data is retrieved.
+  // Fetch new person data when the component mounts, but only once
   useEffect(() => {
-    // Fetch new person data when the component mounts
-    fetchData();
-  }, [fetchData]); // Add fetchData to the dependency array
+    if (!initialFetchDone.current) {
+      fetchData();
+      initialFetchDone.current = true;
+    }
+  }, [fetchData]);
 
+  // Only update history when we have new data
   useEffect(() => {
     if (data) {
       setHistory((prevHistory) => [...prevHistory, data]);
