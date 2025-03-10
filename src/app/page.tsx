@@ -14,14 +14,8 @@ import {
 import { ArrowResetRegular } from "@fluentui/react-icons";
 
 export default function Home() {
-  const {
-    person,
-    history: apiHistory,
-    loading,
-    error,
-    refreshUser,
-    clearHistory,
-  } = usePersonMemory();
+  const { person, loading, error, refreshUser, clearHistory } =
+    usePersonMemory();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedPersonIndex, setSelectedPersonIndex] = useState<number | null>(
     null
@@ -33,7 +27,7 @@ export default function Home() {
     if (person && !personHistory.find((p) => p.email === person.email)) {
       setPersonHistory((prev) => [...prev, person]);
     }
-  }, [person]);
+  }, [person, personHistory]);
 
   // Initialize theme from localStorage if available
   useEffect(() => {
